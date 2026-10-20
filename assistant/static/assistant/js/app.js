@@ -14,6 +14,15 @@ function addMsg(text, who) {
   return div;
 }
 
+function setBot(el, text) {
+  if (window.marked && window.DOMPurify) {
+    el.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    el.classList.add("md");
+  } else {
+    el.textContent = text;   // fallback if the libraries didn't load
+  }
+}
+
 // Offline detection
 function updateOnline() {
   banner.classList.toggle("d-none", navigator.onLine);
@@ -30,15 +39,21 @@ form.addEventListener("submit", async (e) => {
   addMsg(prompt, "user");
   promptEl.value = "";
   const loading = addMsg("Thinking...", "bot");
-  try {
+    try {
     const res = await fetch("/api/chat/", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-CSRFToken": csrf },
       body: JSON.stringify({ prompt }),
     });
     const data = await res.json();
-    loading.textContent = data.reply || data.error || "Something went wrong.";
-  } catch {
+
+    if (data.reply) {
+      setBot(loading, data.reply);
+    } else {
+      loading.textContent = data.error || "Something went wrong.";
+    }
+  } catch (err) {
+    console.error(err);
     loading.textContent = "Network error. Please try again.";
   }
 });
