@@ -1,0 +1,8 @@
+body { background:#f4f4f4; }
+.app-shell { max-width: 640px; }
+.chat-box { background:#fff; border:1px solid #ccc; border-radius:6px;
+            height:60vh; overflow-y:auto; padding:12px; }
+.msg { padding:10px 12px; margin-bottom:10px; border:1px solid #333;
+       border-radius:6px; white-space:pre-wrap; max-width:90%; }
+.msg.user { background:#111; color:#fff; margin-left:auto; }
+.msg.bot { background:#fff; }
